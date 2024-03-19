@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BezierCurve : MonoBehaviour
+{
+    public OriginPoint point1;
+    public OriginPoint point2;
+    public uint segments;
+
+    private Matrix4x4 bezierMatrix = new(new(1, -3, 3, -1), new(0, 3, -6, 3), new(0, 0, 3, -3), new(0, 0, 0, 1));
+    [Range(0, 1)] private float time;
+
+    public Vector3[] GenerateCurve(Transform startPoint, Vector3 startTangent, Transform endPoint, Vector3 endTangent, uint segments)
+    {
+        /*
+            P(t) = [1, t, t^2, t^3] * bezierMatrix * [pos1, pos1a, pos2a, pos2] 
+
+         */
+
+        List<Vector3> lineSegmentPositions = new();
+
+        for(int i = 0; i < segments; i++)
+        {
+            float t = i / (float)segments;
+            Vector4 timeMatrix = new(1, t, Mathf.Pow(t, 2), Mathf.Pow(t, 3));
+
+            Vector3 position = startPoint.position + t * (-3 * startPoint.position + 3 * startTangent)
+                + Mathf.Pow(t, 2) * (3 * startPoint.position - 6 * startTangent + 3 * endTangent)
+                + Mathf.Pow(t, 3) * (-startPoint.position + 3 * startTangent - 3 * endTangent + endPoint.position);
+
+            lineSegmentPositions.Add(position);
+        }
+
+        lineSegmentPositions.Add(endPoint.position);
+
+        return lineSegmentPositions.ToArray();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3[] linePositions = GenerateCurve(point1.transform, point1.connectedTangent.position, point2.transform, point2.connectedTangent.position, segments);
+
+        for(int i = 0; i < linePositions.Length - 1; i++)
+        {
+            Gizmos.DrawLine(linePositions[i], linePositions[i + 1]);
+        }
+    }
+}
