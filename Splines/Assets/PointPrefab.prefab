@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 0
   m_Name: PointPrefab
   m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -45,3 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectedTangent: {fileID: 0}
+  connectedPoint: {fileID: 0}
+  gizmoColor: {r: 0, g: 0, b: 0, a: 0}
