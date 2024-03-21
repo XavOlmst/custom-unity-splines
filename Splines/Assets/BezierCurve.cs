@@ -45,11 +45,25 @@ public class BezierCurve : MonoBehaviour
         return lineSegmentPositions.ToArray();
     }
 
+    public Vector3 GetSplineLocation(float time)
+    {
+        var transform1 = point1.transform;
+        var startPoint = transform1.position;
+        var startTangent = point1.connectedTangent.position;
+        var endTangent = point2.connectedTangent.position;
+        var endPoint = point2.transform.position;
+
+        return startPoint + time * (-3 * startPoint + 3 * startTangent)
+                          + Mathf.Pow(time, 2) * (3 * startPoint - 6 * startTangent + 3 * endTangent)
+                          + Mathf.Pow(time, 3) * (-startPoint + 3 * startTangent - 3 * endTangent + endPoint);
+    }
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = gizmoColor;
 
-        Vector3[] linePositions = GenerateCurve(point1.transform, point1.connectedTangent.position, point2.transform, point2.connectedTangent.position, segments);
+        Vector3[] linePositions = GenerateCurve(point1.transform, point1.connectedTangent.position, 
+            point2.transform, point2.connectedTangent.position, segments);
 
         for(int i = 0; i < linePositions.Length - 1; i++)
         {
