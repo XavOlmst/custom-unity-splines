@@ -15,26 +15,26 @@ public class BezierSpline : MonoBehaviour
     private List<Color> _remainingColors = new();
     private Color _lastColor;
     private int _currentSplineIndex = 0;
-    private float timer = 0.0f;
+    private float _timer = 0.0f;
     
     private void Update()
     {
         if (!moveObject)
             return;
         
-        timer += Time.deltaTime;
+        _timer += Time.deltaTime;
 
-        if (timer > 1.0f)
+        if (_timer > 1.0f)
         {
             _currentSplineIndex++;
-            timer = 0;
+            _timer = 0;
 
             if (_currentSplineIndex == beziers.Count)
                 _currentSplineIndex = 0;
         }
         
-        moveObject.transform.position = beziers[_currentSplineIndex].GetSplineLocation(timer);
-        moveObject.transform.LookAt(beziers[_currentSplineIndex].GetSplineLocation(timer + Time.deltaTime));
+        moveObject.transform.position = beziers[_currentSplineIndex].GetSplineLocation(_timer);
+        moveObject.transform.LookAt(beziers[_currentSplineIndex].GetSplineLocation(_timer + Time.deltaTime));
     }
 
     public void AddBezierCurve()
@@ -91,11 +91,11 @@ public class MyScriptEditor : Editor
 {
 
 
-    override public void OnInspectorGUI()
+    public override void OnInspectorGUI()
     {
         var myScript = target as BezierSpline;
 
-        if(GUILayout.Button("Add Bezier Curve"))
+        if(GUILayout.Button("Add Bezier Curve") && myScript)
         {
             myScript.AddBezierCurve();
         }

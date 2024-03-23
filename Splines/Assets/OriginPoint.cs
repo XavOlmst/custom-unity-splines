@@ -15,12 +15,6 @@ public class OriginPoint : MonoBehaviour
         SetOriginPointData();
     }
 
-    private IEnumerator Co_FrameDelay()
-    {
-        yield return new WaitForEndOfFrame();
-        SetOriginPointData();
-    }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = gizmoColor;
@@ -38,21 +32,25 @@ public class OriginPoint : MonoBehaviour
 
     public void SetOriginPointData()
     {
+        var ourTransform = transform;
+        
         if (connectedPoint)
         {
-            connectedPoint.transform.position = transform.position;
-            connectedPoint.transform.localRotation = transform.localRotation;
-            connectedPoint.transform.localScale = transform.localScale;
+            var connectedPointTransform = connectedPoint.transform;
+
+            connectedPointTransform.position = ourTransform.position;
+            connectedPointTransform.localRotation = ourTransform.localRotation;
+            connectedPointTransform.localScale = ourTransform.localScale;
 
 
             connectedPoint.connectedTangent.position = isEnd
-                ? transform.position - (transform.forward * transform.localScale.z)
-                : transform.position + (transform.forward * transform.localScale.z);
+                ? transform.position - (ourTransform.forward * ourTransform.localScale.z)
+                : transform.position + (ourTransform.forward * ourTransform.localScale.z);
 
         }
 
         connectedTangent.position = isEnd
-            ? transform.position + (transform.forward * transform.localScale.z)
-            : transform.position - (transform.forward * transform.localScale.z);
+            ? transform.position + (ourTransform.forward * ourTransform.localScale.z)
+            : transform.position - (ourTransform.forward * ourTransform.localScale.z);
     }
 }
